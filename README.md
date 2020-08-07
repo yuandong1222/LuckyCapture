@@ -12,14 +12,20 @@ LuckCapture将专门为Lucky Imaging进行优化，包括
 
 - 全多个目标、多个通道的自动化拍摄
 - 为Lucky Imaging流程优化
+- 作为平台Platform：提供Http访问接口和事件回调
 
 ## 设计
 
 - 设备接口：ICamera、ITelescope
 - 组件接口：IGuider、IPlateSolver
 
-## 实现
+## 版本
 
-- Milestore 1：界面原型
-- MileStore 2：ASI6000MM Pro高速读取（2FPS/s）
+- v0.1：最小可运行功能集合
+
+## Milestore 1 - 最小可运行集合
+
+- 设备：相机，赤道仪，调焦座
+- 模块：解析，导星
+- 功能：序列，多目标
 
