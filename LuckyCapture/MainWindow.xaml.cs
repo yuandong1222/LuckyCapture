@@ -35,8 +35,29 @@ namespace LuckyCapture
 
         private void CameraConnect()
         {
-            Button1.Content = ASICameraDll2.ASIGetNumOfConnectedCameras();
-            Content1.Content = ASICameraDll2.ASIGetNumOfConnectedCameras();
+            var log = "";
+            int result = 0;
+
+            int camera_count = ASICameraDll2.ASIGetNumOfConnectedCameras();
+            
+            log += "Camera Count: " +camera_count.ToString() +"\n";
+            if (camera_count == 0) 
+            {
+                log += "No Camera Found\n";
+                Content1.Content = log;
+            }
+
+            //Open
+            
+
+            //Init
+
+            //ASIStartExposure
+
+            //ASIGetExpStatus
+
+
+            //if(status ==ASI_EXP_SUCCESS) ASIGetDataAfterExp
         }
     }
 }
