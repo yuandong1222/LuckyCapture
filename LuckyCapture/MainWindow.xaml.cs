@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -33,7 +34,7 @@ namespace LuckyCapture
             CameraConnect();
         }
 
-        private void CameraConnect()
+        private async void CameraConnect()
         {
             var log = "";
             int result = 0;
@@ -46,9 +47,13 @@ namespace LuckyCapture
                 log += "No Camera Found\n";
                 Content1.Content = log;
             }
-
+            var t = Task.Run(() => {
+                Thread.Sleep(5000);
+                return "Hello I am TimeConsumingMethod";
+            });
+            Content1.Content = await t;
             //Open
-            
+
 
             //Init
 
