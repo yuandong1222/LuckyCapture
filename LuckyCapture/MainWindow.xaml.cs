@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using Xceed.Wpf.Toolkit;
+using ZWOptical.ASISDK;
 
 namespace LuckyCapture
 {
@@ -25,6 +26,17 @@ namespace LuckyCapture
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            CameraConnect();
+        }
+
+        private void CameraConnect()
+        {
+            Button1.Content = ASICameraDll2.ASIGetNumOfConnectedCameras();
+            Content1.Content = ASICameraDll2.ASIGetNumOfConnectedCameras();
         }
     }
 }

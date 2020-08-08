@@ -55,11 +55,11 @@
                         </xcad:LayoutAnchorablePane>
                         <xcad:LayoutDocumentPaneGroup>
                             <xcad:LayoutDocumentPane>
-                                <xcad:LayoutDocument ContentId="document1"
+                                <xcad:LayoutDocument ContentId="document1" x:Name="Content1"
                                      Title="Document 1">
-                                    <Button Content="Document 1 Content"
+                                    <Button Name="Button1" Content="Document 1 Content"
                           HorizontalAlignment="Center"
-                          VerticalAlignment="Center" />
+                          VerticalAlignment="Center" Click="Button_Click" />
                                 </xcad:LayoutDocument>
                                 <xcad:LayoutDocument ContentId="document2"
                                      Title="Document 2">
