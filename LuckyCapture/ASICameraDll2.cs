@@ -323,10 +323,12 @@ namespace ZWOptical.ASISDK
 
 
         [DllImport("ASICamera2.dll", EntryPoint = "ASIGetDataAfterExp", CallingConvention = CallingConvention.Cdecl)]
-        private static extern ASI_ERROR_CODE ASIGetDataAfterExp32(int iCameraID, IntPtr pBuffer, int lBuffSize);
+        //private static extern ASI_ERROR_CODE ASIGetDataAfterExp32(int iCameraID, IntPtr pBuffer, int lBuffSize);
+        private static extern ASI_ERROR_CODE ASIGetDataAfterExp32(int iCameraID, [Out] ushort[] pBuffer, int lBuffSize);
 
         [DllImport("ASICamera2_x64.dll", EntryPoint = "ASIGetDataAfterExp", CallingConvention = CallingConvention.Cdecl)]
-        private static extern ASI_ERROR_CODE ASIGetDataAfterExp64(int iCameraID, IntPtr pBuffer, int lBuffSize);
+        //private static extern ASI_ERROR_CODE ASIGetDataAfterExp64(int iCameraID, IntPtr pBuffer, int lBuffSize);
+        private static extern ASI_ERROR_CODE ASIGetDataAfterExp64(int iCameraID, [Out] ushort[] pBuffer, int lBuffSize);
 
 
         [DllImport("ASICamera2.dll", EntryPoint = "ASIGetGainOffset", CallingConvention = CallingConvention.Cdecl)]
@@ -416,7 +418,10 @@ namespace ZWOptical.ASISDK
         public static ASI_ERROR_CODE ASIGetExpStatus(int iCameraID, out ASI_EXPOSURE_STATUS pExpStatus)
         { return IntPtr.Size == 8 /* 64bit */ ? ASIGetExpStatus64(iCameraID, out pExpStatus) : ASIGetExpStatus32(iCameraID, out pExpStatus); }
 
-        public static ASI_ERROR_CODE ASIGetDataAfterExp(int iCameraID, IntPtr pBuffer, int lBuffSize)
+        //public static ASI_ERROR_CODE ASIGetDataAfterExp(int iCameraID, IntPtr pBuffer, int lBuffSize)
+        //{ return IntPtr.Size == 8 /* 64bit */ ? ASIGetDataAfterExp64(iCameraID, pBuffer, lBuffSize) : ASIGetDataAfterExp32(iCameraID, pBuffer, lBuffSize); }
+
+        public static ASI_ERROR_CODE ASIGetDataAfterExp(int iCameraID, [Out] ushort[] pBuffer, int lBuffSize)
         { return IntPtr.Size == 8 /* 64bit */ ? ASIGetDataAfterExp64(iCameraID, pBuffer, lBuffSize) : ASIGetDataAfterExp32(iCameraID, pBuffer, lBuffSize); }
 
         public static ASI_ERROR_CODE ASIGetGainOffset(int iCameraID, out int Offset_HighestDR, out int Offset_UnityGain, out int Gain_LowestRN, out int Offset_LowestRN)
