@@ -41,4 +41,4 @@ LuckyCapture将专门为Lucky Imaging进行优化，包括
 
 ## 软件设计
 
-![image](http://github.com/yuandong1222/LuckyCapture/Doc/Architecture.png)
+![image](https://github.com/yuandong1222/LuckyCapture/blob/master/Doc/Architecture.png)
