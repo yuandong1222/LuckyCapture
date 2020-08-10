@@ -18,9 +18,9 @@ LuckyCapture将专门为Lucky Imaging进行优化，包括
 
 ## 特性
 
-- 全多个目标、多个通道的自动化拍摄
+- 多个目标、多个通道的自动化拍摄
 - 为Lucky Imaging流程优化
-- 平台化Platform：提供Http访问接口和事件回调
+- 平台化Platform，提供Http访问接口和事件回调
 - 校检帧的自动拍摄与合成
 - 自动化预处理（暗场，平场，Bias）
 - 设备电源的自动管理
