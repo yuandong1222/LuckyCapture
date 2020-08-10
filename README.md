@@ -33,13 +33,12 @@ LuckyCapture将专门为Lucky Imaging进行优化，包括
 - v0.1：最小可运行功能集合
 - v0.2：面向Lucky Imaging的优化
 
-## v0.1：最小可运行集合
+### v0.1：最小可运行集合
 
 - 设备：相机，赤道仪，调焦座
 - 模块：解析，导星
-- 功能：序列，多目标∏
+- 功能：序列，多目标
 
 ## 软件设计
 
-- 设备接口：ICamera、ITelescope
-- 组件接口：IGuider、IPlateSolver
+![软件架构](./Doc/Architecture.png ''软件架构'')
