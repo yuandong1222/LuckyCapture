@@ -52,12 +52,6 @@ namespace LuckyCapture
                 Content1.Content = logBuilder.ToString();
                 return;
             }
-            var t = Task.Run(() =>
-            {
-                Thread.Sleep(5000);
-                return "Hello I am TimeConsumingMethod";
-            });
-            Content1.Content = await t;
 
             //Open
             asi_result = ASICameraDll2.ASIOpenCamera(0);
@@ -79,6 +73,8 @@ namespace LuckyCapture
             ushort[] arr = new ushort[size];
             int buffersize = size * 2;
             asi_result = ASICameraDll2.ASIGetDataAfterExp(0, arr, buffersize);
+            logBuilder.AppendFormat("Result {0}\n", asi_result);
+            Content1.Content = logBuilder.ToString();
         }
     }
 }

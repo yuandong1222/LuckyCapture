@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItem", "SolutionIte
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuckyCatpure.Engine", "LuckyCatpure.Engine\LuckyCatpure.Engine.csproj", "{D031A745-B744-49E6-AC05-01FE4924A2FB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +22,10 @@ Global
 		{19FEEF4E-965A-4040-B7CD-BFD9D1195D0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19FEEF4E-965A-4040-B7CD-BFD9D1195D0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19FEEF4E-965A-4040-B7CD-BFD9D1195D0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D031A745-B744-49E6-AC05-01FE4924A2FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D031A745-B744-49E6-AC05-01FE4924A2FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D031A745-B744-49E6-AC05-01FE4924A2FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D031A745-B744-49E6-AC05-01FE4924A2FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
