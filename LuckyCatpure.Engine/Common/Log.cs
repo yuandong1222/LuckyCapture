@@ -41,5 +41,44 @@ namespace LuckyCatpure.Engine.Common
         {
             log.Info(message, e);
         }
+
+        public static void Warn(string message)
+        {
+            log.Warn(message);
+        }
+        public static void Warn(string message, Object[] args)
+        {
+            log.WarnFormat(message, args);
+        }
+        public static void WarnException(string message, Exception e)
+        {
+            log.Warn(message, e);
+        }
+
+        public static void Error(string message)
+        {
+            log.Error(message);
+        }
+        public static void Error(string message, Object[] args)
+        {
+            log.ErrorFormat(message, args);
+        }
+        public static void ErrorException(string message, Exception e)
+        {
+            log.Error(message, e);
+        }
+
+        public static void Fatal(string message)
+        {
+            log.Fatal(message);
+        }
+        public static void Fatal(string message, Object[] args)
+        {
+            log.FatalFormat(message, args);
+        }
+        public static void FatalException(string message, Exception e)
+        {
+            log.Fatal(message, e);
+        }
     }
 }
