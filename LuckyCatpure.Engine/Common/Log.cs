@@ -20,5 +20,13 @@ namespace LuckyCatpure.Engine.Common
         {
             log.Info(message);
         }
+        public static void Info(string message, Object[] args)
+        {
+            log.InfoFormat(message, args);
+        }
+        public static void InfoException(string message, Exception e)
+        {
+            log.Info(message, e);
+        }
     }
 }
