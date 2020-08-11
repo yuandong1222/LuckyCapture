@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LuckyCatpure.Engine.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,6 +38,8 @@ namespace LuckyCapture
 
         private async void CameraConnect()
         {
+            Log.Info("test");
+
             var logBuilder = new StringBuilder();
 
             ASI_ERROR_CODE asi_result = 0;

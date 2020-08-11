@@ -8,10 +8,17 @@ namespace LuckyCatpure.Engine.Common
 {
     public class Log
     {
-        public static void Info(string )
-        {
-            ILog log = log4net.LogManager.GetLogger("Default");
+        static ILog log;
 
+        static Log()
+        {
+            log4net.Config.XmlConfigurator.Configure();
+            log = log4net.LogManager.GetLogger("");
+        }
+
+        public static void Info(string message)
+        {
+            log.Info(message);
         }
     }
 }
