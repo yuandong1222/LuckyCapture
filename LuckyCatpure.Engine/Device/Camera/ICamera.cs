@@ -8,15 +8,14 @@ namespace LuckyCatpure.Engine.Device.Camera
 {
     public interface ICamera
     {
-        /// <summary>
-        /// For User to kown which camera is
-        /// </summary>
-        string CameraName { get; set; }
+        CameraInfo Info { get; set; }
 
         ErrorCode Connect();
 
         ErrorCode StartCapture(int millisecond);
 
         ErrorCode GetCaputreStat();
+
+        ErrorCode GetCaputreData(UInt16[] data);
     }
 }

@@ -8,5 +8,6 @@ namespace LuckyCatpure.Engine.Common
     {
         Unknown = -1,
         OK = 0,
+        Error = 1,
     }
 }

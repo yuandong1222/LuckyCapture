@@ -4,4 +4,24 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="SDKs\ZWO_ASI\ASICamera2.dll" />
+    <None Remove="SDKs\ZWO_ASI\ASICamera2.h" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="SDKs\ZWO_ASI\ASICamera2.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SDKs\ZWO_ASI\ASICamera2.h">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="SDKs\ZWO_ASI\ASICamera2.lib">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
