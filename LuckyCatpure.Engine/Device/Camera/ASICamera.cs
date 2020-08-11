@@ -33,7 +33,7 @@ namespace LuckyCatpure.Engine.Device.Camera
 
         private int CameraID;
 
-        public CameraInfo Info { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public CameraInfo Info { get; set; }
 
         public ErrorCode Connect()
         {
