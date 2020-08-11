@@ -14,6 +14,8 @@ namespace LuckyCatpure.Engine.Device.Camera
         {
             List<ICamera> cameras = new List<ICamera>();
 
+            //TODO: Should try-catch for every SDK Call
+            //TODO: Should Add log
             int camera_count = ASICameraDll2.ASIGetNumOfConnectedCameras();
             if (camera_count == 0) return cameras.ToArray();
 
@@ -22,7 +24,7 @@ namespace LuckyCatpure.Engine.Device.Camera
                 var camera = new ASICamera();
                 camera.CameraID = i;
 
-                //TOTO: Build CameraInfo
+                //TODO: Build CameraInfo
 
                 cameras.Add(camera);
             }
