@@ -16,6 +16,19 @@ namespace LuckyCatpure.Engine.Common
             log = log4net.LogManager.GetLogger("");
         }
 
+        public static void Debug(string message)
+        {
+            log.Debug(message);
+        }
+        public static void Debug(string message, Object[] args)
+        {
+            log.DebugFormat(message, args);
+        }
+        public static void DebugException(string message, Exception e)
+        {
+            log.Debug(message, e);
+        }
+
         public static void Info(string message)
         {
             log.Info(message);
