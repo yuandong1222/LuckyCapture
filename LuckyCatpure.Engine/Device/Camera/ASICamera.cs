@@ -10,14 +10,22 @@ namespace LuckyCatpure.Engine.Device.Camera
 {
     public class ASICamera : ICamera
     {
-        public static ICamera[] ScanCameras()
+        public static Result ScanCameras(List<ICamera> cameraList)
         {
-            List<ICamera> cameras = new List<ICamera>();
+            int camera_count = 0;
 
             //TODO: Should try-catch for every SDK Call
             //TODO: Should Add log
-            int camera_count = ASICameraDll2.ASIGetNumOfConnectedCameras();
-            if (camera_count == 0) return cameras.ToArray();
+            try
+            {
+                camera_count = ASICameraDll2.ASIGetNumOfConnectedCameras();
+            }
+            catch
+            {
+
+            }
+            if (camera_count == 0)
+                return new Result { Code = ErrorCode.OK, Message = "No ASI Camera Found" };
 
             for (int i = 0; i < camera_count; i++)
             {
@@ -26,9 +34,11 @@ namespace LuckyCatpure.Engine.Device.Camera
 
                 //TODO: Build CameraInfo
 
-                cameras.Add(camera);
+                cameraList.Add(camera);
             }
-            return cameras.ToArray();
+
+
+            return new Result { Code = ErrorCode.OK, Message = String.Format("ASI Camera Found, Total Count: {0}", camera_count) };
         }
 
         private int CameraID;
