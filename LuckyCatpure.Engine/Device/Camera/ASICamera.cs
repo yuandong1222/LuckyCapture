@@ -106,7 +106,7 @@ namespace LuckyCatpure.Engine.Device.Camera
         {
             ASI_ERROR_CODE asi_error_code = ASI_ERROR_CODE.ASI_SUCCESS;
             Exception exception = null;
-            Result result = null;
+            Result result;
 
             try
             {
@@ -129,6 +129,18 @@ namespace LuckyCatpure.Engine.Device.Camera
             }
             return GetOperationResult("ASIInitCamera", asi_error_code, exception);
         }
+        public Result StartCapture(int millisecond)
+        {
+            throw new NotImplementedException();
+        }
+        public Result GetCaputreData(ushort[] data)
+        {
+            throw new NotImplementedException();
+        }
+        public Result GetCaputreStat()
+        {
+            throw new NotImplementedException();
+        }
 
         private Result GetOperationResult(string operation_name, ASI_ERROR_CODE asi_error_code, Exception exception)
         {
@@ -142,22 +154,5 @@ namespace LuckyCatpure.Engine.Device.Camera
 
             return new Result(ErrorCode.OperationFailed, message, exception);
         }
-
-
-        public Result GetCaputreData(ushort[] data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Result GetCaputreStat()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Result StartCapture(int millisecond)
-        {
-            throw new NotImplementedException();
-        }
-
     }
 }
