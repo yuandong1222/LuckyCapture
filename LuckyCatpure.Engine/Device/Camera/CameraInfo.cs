@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LuckyCatpure.Engine.Common;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -9,6 +10,8 @@ namespace LuckyCatpure.Engine.Device.Camera
         public string DisplayName { get; set; }
 
         public CameraSDKType SDKType { get; set; }
+
+        BayerPattern BayerPattern { get; set; };
 
         public bool CanCool { get; set; }        
         public int MaxHeight { get; set; }
