@@ -12,9 +12,9 @@ namespace LuckyCatpure.Engine.Device.Camera
         public CameraSDKType SDKType { get; set; }
 
         public bool IsColorCamera { get; set; }
-        BayerPattern BayerPattern { get; set; }
+        public BayerPattern BayerPattern { get; set; }
 
-        public int MaxBin { get; set; }
+        public int[] SupportBins { get; set; }
 
         public bool CanCool { get; set; }
 

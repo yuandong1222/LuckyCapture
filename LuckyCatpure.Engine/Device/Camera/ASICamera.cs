@@ -48,13 +48,23 @@ namespace LuckyCatpure.Engine.Device.Camera
                     break;
                 }
 
-                //TODO: There are many other properties
-                var cameraInfo = new CameraInfo();
-                cameraInfo.SDKType = CameraSDKType.ASI;
-                cameraInfo.DisplayName = pASICameraInfo.Name;
-                cameraInfo.CanCool = pASICameraInfo.IsCoolerCam == ASICameraDll2.ASI_BOOL.ASI_TRUE;
-                cameraInfo.MaxHeight = pASICameraInfo.MaxHeight;
-                cameraInfo.MaxWeight = pASICameraInfo.MaxWidth;
+                var cameraInfo = new CameraInfo
+                {
+                    DisplayName = pASICameraInfo.Name,
+                    SDKType = CameraSDKType.ASI,
+                    IsColorCamera = pASICameraInfo.IsColorCam == ASICameraDll2.ASI_BOOL.ASI_TRUE,
+                    BayerPattern = GetBayerPattern(pASICameraInfo.BayerPattern),
+                    SupportBins = pASICameraInfo.SupportedBins,
+                    CanCool = pASICameraInfo.IsCoolerCam == ASICameraDll2.ASI_BOOL.ASI_TRUE,
+                    HasMechanicalShutter = pASICameraInfo.MechanicalShutter == ASICameraDll2.ASI_BOOL.ASI_TRUE,
+                    HasST4Port = pASICameraInfo.ST4Port == ASICameraDll2.ASI_BOOL.ASI_TRUE,
+                    IsUSB3Host = pASICameraInfo.IsUSB3Host == ASICameraDll2.ASI_BOOL.ASI_TRUE,
+                    IsUSB3Camera = pASICameraInfo.IsUSB3Camera == ASICameraDll2.ASI_BOOL.ASI_TRUE,
+                    PixelSize = Convert.ToInt32(pASICameraInfo.PixelSize * 1000),
+                    ElecPerADU = Convert.ToInt32(pASICameraInfo.ElecPerADU * 1000),
+                    MaxHeight = pASICameraInfo.MaxHeight,
+                    MaxWeight = pASICameraInfo.MaxWidth
+                };
 
                 var camera = new ASICamera(cameraID, cameraInfo);
                 cameraList.Add(camera);
@@ -63,6 +73,19 @@ namespace LuckyCatpure.Engine.Device.Camera
             }
 
             return new Result { Code = ErrorCode.OK, Message = String.Format("ASI Camera Found, Total Count: {0}", camera_count) };
+        }
+
+        private static BayerPattern GetBayerPattern(ASICameraDll2.ASI_BAYER_PATTERN bayerPattern)
+        {
+            switch (bayerPattern)
+            {
+                case ASICameraDll2.ASI_BAYER_PATTERN.ASI_BAYER_RG:
+                    return BayerPattern.RGGB;
+                case ASICameraDll2.ASI_BAYER_PATTERN.ASI_BAYER_BG:
+                    return BayerPattern.BGGR;
+                default:
+                    return BayerPattern.Unknown;
+            }
         }
 
         private int _CameraID;
