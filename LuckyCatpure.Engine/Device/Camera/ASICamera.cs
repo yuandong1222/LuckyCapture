@@ -51,6 +51,7 @@ namespace LuckyCatpure.Engine.Device.Camera
                 //TODO: There are many other properties
                 var cameraInfo = new CameraInfo();
                 cameraInfo.SDKType = CameraSDKType.ASI;
+                cameraInfo.DisplayName = pASICameraInfo.Name;
                 cameraInfo.CanCool = pASICameraInfo.IsCoolerCam == ASICameraDll2.ASI_BOOL.ASI_TRUE;
                 cameraInfo.MaxHeight = pASICameraInfo.MaxHeight;
                 cameraInfo.MaxWeight = pASICameraInfo.MaxWidth;
