@@ -65,7 +65,7 @@ namespace LuckyCatpure.Engine.Device.Camera
                     IsUSB3Host = pASICameraInfo.IsUSB3Host == ASI_BOOL.ASI_TRUE,
                     IsUSB3Camera = pASICameraInfo.IsUSB3Camera == ASI_BOOL.ASI_TRUE,
                     PixelSize = Convert.ToInt32(pASICameraInfo.PixelSize * 1000),
-                    ElecPerADU = Convert.ToInt32(pASICameraInfo.ElecPerADU * 1000),
+                    ElecPerADU = Convert.ToInt32(pASICameraInfo.ElecPerADU * 1000000),
                     MaxHeight = pASICameraInfo.MaxHeight,
                     MaxWeight = pASICameraInfo.MaxWidth
                 };
@@ -133,22 +133,25 @@ namespace LuckyCatpure.Engine.Device.Camera
         {
             throw new NotImplementedException();
         }
-        public Result GetCaputreData(ushort[] data)
-        {
-            throw new NotImplementedException();
-        }
         public Result GetCaputreStat()
         {
             throw new NotImplementedException();
         }
+        public Result GetCaputreData(ushort[] data)
+        {
+            throw new NotImplementedException();
+        }
 
-        private Result GetOperationResult(string operation_name, ASI_ERROR_CODE asi_error_code, Exception exception)
+        private Result GetOperationResult(string operationName, ASI_ERROR_CODE asi_error_code, Exception exception)
         {
             if (exception == null && asi_error_code == ASI_ERROR_CODE.ASI_SUCCESS)
+            {
+                Log.InfoFormat("{0} Success, CameraID {1}, CameraName {2}", operationName, _CameraID, CameraInfo.DisplayName);
                 return new Result();
+            }
 
             string message = String.Format("{0} Failed, CameraID {1}, CameraName {2}, ASI_ERROR_CODE {3}",
-                operation_name, _CameraID, CameraInfo.DisplayName, asi_error_code.ToString());
+                operationName, _CameraID, CameraInfo.DisplayName, asi_error_code.ToString());
 
             Log.Error(message, exception);
 

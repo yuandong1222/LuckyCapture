@@ -29,11 +29,13 @@ namespace LuckyCatpure.Engine.Device.Camera
         /// </summary>
         public int PixelSize { get; set; }
         /// <summary>
-        /// 1500 mean 1.5e per ADU
+        /// TODO: 1500 mean 1.5e per ADU
         /// </summary>
         public int ElecPerADU { get; set; }
 
         public int MaxHeight { get; set; }
         public int MaxWeight { get; set; }
+
+        public int MaxPixelCount { get { return MaxHeight * MaxWeight; } }
     }
 }
