@@ -13,17 +13,18 @@ namespace LuckyCatpure.Engine.Device.Camera
         public static Result ScanCameras(List<ICamera> cameraList)
         {
             int camera_count = 0;
+            ASICameraDll2.ASI_ERROR_CODE asi_error_code = ASICameraDll2.ASI_ERROR_CODE.ASI_SUCCESS;
 
-            //TODO: Should try-catch for every SDK Call
-            //TODO: Should Add log
             try
             {
                 camera_count = ASICameraDll2.ASIGetNumOfConnectedCameras();
             }
-            catch
+            catch (Exception e)
             {
-
+                Log.ErrorException("Failed to ASIGetNumOfConnectedCameras.", e);
+                return new Result { Code = ErrorCode.Error, Message = "Failed to ASIGetNumOfConnectedCameras.", Exception = e };
             }
+
             if (camera_count == 0)
                 return new Result { Code = ErrorCode.OK, Message = "No ASI Camera Found" };
 
@@ -32,7 +33,20 @@ namespace LuckyCatpure.Engine.Device.Camera
                 var camera = new ASICamera();
                 camera.CameraID = i;
 
-                //TODO: Build CameraInfo
+                var pASICameraInfo = new ASICameraDll2.ASI_CAMERA_INFO();
+                try
+                {
+                    asi_error_code = ASICameraDll2.ASIGetCameraProperty(out pASICameraInfo, i);
+                }
+                catch (Exception e)
+                {
+                    Log.ErrorException(string.Format("Failed to ASIGetCameraProperty for camera_id {0}, ASI_ERROR_CODE {1}", i, asi_error_code), e);
+                    break;
+                }
+                if (asi_error_code != ASICameraDll2.ASI_ERROR_CODE.ASI_SUCCESS)
+                {
+                    Log.Error(string.Format("Failed to ASIGetCameraProperty for camera_id {0}, ASI_ERROR_CODE {1}", i, asi_error_code));
+                }
 
                 cameraList.Add(camera);
             }
