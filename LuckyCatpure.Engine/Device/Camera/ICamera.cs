@@ -8,7 +8,7 @@ namespace LuckyCatpure.Engine.Device.Camera
 {
     public interface ICamera
     {
-        CameraInfo Info { get; set; }
+        CameraInfo CameraInfo { get; set; }
 
         ErrorCode Connect();
 

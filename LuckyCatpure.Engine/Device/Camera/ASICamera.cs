@@ -30,10 +30,9 @@ namespace LuckyCatpure.Engine.Device.Camera
 
             for (int i = 0; i < camera_count; i++)
             {
-                var camera = new ASICamera();
-                camera.CameraID = i;
-
+                var cameraID = i;
                 var pASICameraInfo = new ASICameraDll2.ASI_CAMERA_INFO();
+
                 try
                 {
                     asi_error_code = ASICameraDll2.ASIGetCameraProperty(out pASICameraInfo, i);
@@ -46,18 +45,33 @@ namespace LuckyCatpure.Engine.Device.Camera
                 if (asi_error_code != ASICameraDll2.ASI_ERROR_CODE.ASI_SUCCESS)
                 {
                     Log.Error(string.Format("Failed to ASIGetCameraProperty for camera_id {0}, ASI_ERROR_CODE {1}", i, asi_error_code));
+                    break;
                 }
 
+                //TODO: There are many other properties
+                var cameraInfo = new CameraInfo();
+                cameraInfo.SDKType = CameraSDKType.ASI;
+                cameraInfo.CanCool = pASICameraInfo.IsCoolerCam == ASICameraDll2.ASI_BOOL.ASI_TRUE;
+                cameraInfo.MaxHeight = pASICameraInfo.MaxHeight;
+                cameraInfo.MaxWeight = pASICameraInfo.MaxWidth;
+
+                var camera = new ASICamera(cameraID, cameraInfo);
                 cameraList.Add(camera);
             }
-
 
             return new Result { Code = ErrorCode.OK, Message = String.Format("ASI Camera Found, Total Count: {0}", camera_count) };
         }
 
-        private int CameraID;
+        private int _CameraID;
 
-        public CameraInfo Info { get; set; }
+        public int CameraID { get { return _CameraID; } }
+        public CameraInfo CameraInfo { get; set; }
+
+        public ASICamera(int cameraID, CameraInfo cameraInfo)
+        {
+            this._CameraID = cameraID;
+            this.CameraInfo = cameraInfo;
+        }
 
         public ErrorCode Connect()
         {
