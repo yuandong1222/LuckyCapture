@@ -33,7 +33,7 @@ namespace LuckyCatpure.Engine.Common
         {
             log.Info(message);
         }
-        public static void Info(string message, Object[] args)
+        public static void Info(string message, params Object[] args)
         {
             log.InfoFormat(message, args);
         }
@@ -46,7 +46,7 @@ namespace LuckyCatpure.Engine.Common
         {
             log.Warn(message);
         }
-        public static void Warn(string message, Object[] args)
+        public static void Warn(string message, params Object[] args)
         {
             log.WarnFormat(message, args);
         }
@@ -59,7 +59,7 @@ namespace LuckyCatpure.Engine.Common
         {
             log.Error(message);
         }
-        public static void Error(string message, Object[] args)
+        public static void Error(string message, params Object[] args)
         {
             log.ErrorFormat(message, args);
         }
@@ -72,7 +72,7 @@ namespace LuckyCatpure.Engine.Common
         {
             log.Fatal(message);
         }
-        public static void Fatal(string message, Object[] args)
+        public static void Fatal(string message, params Object[] args)
         {
             log.FatalFormat(message, args);
         }

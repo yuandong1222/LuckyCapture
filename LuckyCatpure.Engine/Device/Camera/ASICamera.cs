@@ -44,7 +44,7 @@ namespace LuckyCatpure.Engine.Device.Camera
                 }
                 if (asi_error_code != ASICameraDll2.ASI_ERROR_CODE.ASI_SUCCESS)
                 {
-                    Log.Error(string.Format("Failed to ASIGetCameraProperty for camera_id {0}, ASI_ERROR_CODE {1}", i, asi_error_code));
+                    Log.Error("Failed to ASIGetCameraProperty for camera_id {0}, ASI_ERROR_CODE {1}", i, asi_error_code);
                     break;
                 }
 
@@ -58,6 +58,8 @@ namespace LuckyCatpure.Engine.Device.Camera
 
                 var camera = new ASICamera(cameraID, cameraInfo);
                 cameraList.Add(camera);
+
+                Log.Info("Found ASI Camera: {0}", cameraInfo.DisplayName);
             }
 
             return new Result { Code = ErrorCode.OK, Message = String.Format("ASI Camera Found, Total Count: {0}", camera_count) };

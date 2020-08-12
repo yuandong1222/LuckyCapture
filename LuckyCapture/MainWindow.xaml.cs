@@ -1,4 +1,5 @@
 ﻿using LuckyCatpure.Engine.Common;
+using LuckyCatpure.Engine.Device.Camera;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +40,9 @@ namespace LuckyCapture
         private async void CameraConnect()
         {
             Log.Info("test");
+
+            List<ICamera> cameraList = new List<ICamera>();
+            ASICamera.ScanCameras(cameraList);
 
             var logBuilder = new StringBuilder();
 
