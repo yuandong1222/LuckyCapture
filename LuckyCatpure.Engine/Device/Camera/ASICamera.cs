@@ -1,50 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
 
 using LuckyCatpure.Engine.Common;
 
 using ZWOptical.ASISDK;
+using static ZWOptical.ASISDK.ASICameraDll2;
 
 namespace LuckyCatpure.Engine.Device.Camera
 {
     public class ASICamera : ICamera
     {
-        public static Result ScanCameras(List<ICamera> cameraList)
+        public static Result ScanASICameras(List<ICamera> cameraList)
         {
             int camera_count = 0;
-            ASICameraDll2.ASI_ERROR_CODE asi_error_code = ASICameraDll2.ASI_ERROR_CODE.ASI_SUCCESS;
+            ASI_ERROR_CODE asi_error_code = ASI_ERROR_CODE.ASI_SUCCESS;
 
             try
             {
-                camera_count = ASICameraDll2.ASIGetNumOfConnectedCameras();
+                camera_count = ASIGetNumOfConnectedCameras();
             }
             catch (Exception e)
             {
-                Log.ErrorException("Failed to ASIGetNumOfConnectedCameras.", e);
-                return new Result { Code = ErrorCode.Error, Message = "Failed to ASIGetNumOfConnectedCameras.", Exception = e };
+                var message = "Failed to ASIGetNumOfConnectedCameras.";
+                Log.Error(message, e);
+                return new Result(ErrorCode.OperationFailed, message, e);
             }
 
             if (camera_count == 0)
-                return new Result { Code = ErrorCode.OK, Message = "No ASI Camera Found" };
+                return new Result("No ASI Camera Found");
 
             for (int i = 0; i < camera_count; i++)
             {
                 var cameraID = i;
-                var pASICameraInfo = new ASICameraDll2.ASI_CAMERA_INFO();
+                var pASICameraInfo = new ASI_CAMERA_INFO();
+                Exception exception = null;
 
                 try
                 {
-                    asi_error_code = ASICameraDll2.ASIGetCameraProperty(out pASICameraInfo, i);
+                    asi_error_code = ASIGetCameraProperty(out pASICameraInfo, i);
                 }
                 catch (Exception e)
                 {
-                    Log.ErrorException(string.Format("Failed to ASIGetCameraProperty for camera_id {0}, ASI_ERROR_CODE {1}", i, asi_error_code), e);
-                    break;
+                    exception = e;
                 }
-                if (asi_error_code != ASICameraDll2.ASI_ERROR_CODE.ASI_SUCCESS)
+                if (exception != null || asi_error_code != ASI_ERROR_CODE.ASI_SUCCESS)
                 {
-                    Log.Error("Failed to ASIGetCameraProperty for camera_id {0}, ASI_ERROR_CODE {1}", i, asi_error_code);
+                    string message = string.Format("Failed to ASIGetCameraProperty for CameraID {0}, ASI_ERROR_CODE {1}", i, asi_error_code.ToString());
+                    Log.Error(message, exception);
                     break;
                 }
 
@@ -52,14 +56,14 @@ namespace LuckyCatpure.Engine.Device.Camera
                 {
                     DisplayName = pASICameraInfo.Name,
                     SDKType = CameraSDKType.ASI,
-                    IsColorCamera = pASICameraInfo.IsColorCam == ASICameraDll2.ASI_BOOL.ASI_TRUE,
-                    BayerPattern = GetBayerPattern(pASICameraInfo.BayerPattern),
+                    IsColorCamera = pASICameraInfo.IsColorCam == ASI_BOOL.ASI_TRUE,
+                    BayerPattern = GetASIBayerPattern(pASICameraInfo.BayerPattern),
                     SupportBins = pASICameraInfo.SupportedBins,
-                    CanCool = pASICameraInfo.IsCoolerCam == ASICameraDll2.ASI_BOOL.ASI_TRUE,
-                    HasMechanicalShutter = pASICameraInfo.MechanicalShutter == ASICameraDll2.ASI_BOOL.ASI_TRUE,
-                    HasST4Port = pASICameraInfo.ST4Port == ASICameraDll2.ASI_BOOL.ASI_TRUE,
-                    IsUSB3Host = pASICameraInfo.IsUSB3Host == ASICameraDll2.ASI_BOOL.ASI_TRUE,
-                    IsUSB3Camera = pASICameraInfo.IsUSB3Camera == ASICameraDll2.ASI_BOOL.ASI_TRUE,
+                    CanCool = pASICameraInfo.IsCoolerCam == ASI_BOOL.ASI_TRUE,
+                    HasMechanicalShutter = pASICameraInfo.MechanicalShutter == ASI_BOOL.ASI_TRUE,
+                    HasST4Port = pASICameraInfo.ST4Port == ASI_BOOL.ASI_TRUE,
+                    IsUSB3Host = pASICameraInfo.IsUSB3Host == ASI_BOOL.ASI_TRUE,
+                    IsUSB3Camera = pASICameraInfo.IsUSB3Camera == ASI_BOOL.ASI_TRUE,
                     PixelSize = Convert.ToInt32(pASICameraInfo.PixelSize * 1000),
                     ElecPerADU = Convert.ToInt32(pASICameraInfo.ElecPerADU * 1000),
                     MaxHeight = pASICameraInfo.MaxHeight,
@@ -69,19 +73,18 @@ namespace LuckyCatpure.Engine.Device.Camera
                 var camera = new ASICamera(cameraID, cameraInfo);
                 cameraList.Add(camera);
 
-                Log.Info("Found ASI Camera: {0}", cameraInfo.DisplayName);
+                Log.InfoFormat("Found ASI Camera {0}, CameraID {1}", cameraInfo.DisplayName, cameraID);
             }
 
-            return new Result { Code = ErrorCode.OK, Message = String.Format("ASI Camera Found, Total Count: {0}", camera_count) };
+            return new Result(String.Format("ASI Camera Found, Total Count: {0}", camera_count));
         }
-
-        private static BayerPattern GetBayerPattern(ASICameraDll2.ASI_BAYER_PATTERN bayerPattern)
+        private static BayerPattern GetASIBayerPattern(ASI_BAYER_PATTERN bayerPattern)
         {
             switch (bayerPattern)
             {
-                case ASICameraDll2.ASI_BAYER_PATTERN.ASI_BAYER_RG:
+                case ASI_BAYER_PATTERN.ASI_BAYER_RG:
                     return BayerPattern.RGGB;
-                case ASICameraDll2.ASI_BAYER_PATTERN.ASI_BAYER_BG:
+                case ASI_BAYER_PATTERN.ASI_BAYER_BG:
                     return BayerPattern.BGGR;
                 default:
                     return BayerPattern.Unknown;
@@ -99,22 +102,59 @@ namespace LuckyCatpure.Engine.Device.Camera
             this.CameraInfo = cameraInfo;
         }
 
-        public ErrorCode Connect()
+        public Result Connect()
+        {
+            ASI_ERROR_CODE asi_error_code = ASI_ERROR_CODE.ASI_SUCCESS;
+            Exception exception = null;
+            Result result = null;
+
+            try
+            {
+                asi_error_code = ASIOpenCamera(_CameraID);
+            }
+            catch (Exception e)
+            {
+                exception = e;
+            }
+            result = GetOperationResult("ASIOpenCamera", asi_error_code, exception);
+            if (result.Code != ErrorCode.OK) return result;
+
+            try
+            {
+                asi_error_code = ASIInitCamera(_CameraID);
+            }
+            catch (Exception e)
+            {
+                exception = e;
+            }
+            return GetOperationResult("ASIInitCamera", asi_error_code, exception);
+        }
+
+        private Result GetOperationResult(string operation_name, ASI_ERROR_CODE asi_error_code, Exception exception)
+        {
+            if (exception == null && asi_error_code == ASI_ERROR_CODE.ASI_SUCCESS)
+                return new Result();
+
+            string message = String.Format("{0} Failed, CameraID {1}, CameraName {2}, ASI_ERROR_CODE {3}",
+                operation_name, _CameraID, CameraInfo.DisplayName, asi_error_code.ToString());
+
+            Log.Error(message, exception);
+
+            return new Result(ErrorCode.OperationFailed, message, exception);
+        }
+
+
+        public Result GetCaputreData(ushort[] data)
         {
             throw new NotImplementedException();
         }
 
-        public ErrorCode GetCaputreData(ushort[] data)
+        public Result GetCaputreStat()
         {
             throw new NotImplementedException();
         }
 
-        public ErrorCode GetCaputreStat()
-        {
-            throw new NotImplementedException();
-        }
-
-        public ErrorCode StartCapture(int millisecond)
+        public Result StartCapture(int millisecond)
         {
             throw new NotImplementedException();
         }

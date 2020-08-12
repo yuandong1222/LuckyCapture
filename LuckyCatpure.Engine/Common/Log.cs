@@ -20,65 +20,80 @@ namespace LuckyCatpure.Engine.Common
         {
             log.Debug(message);
         }
-        public static void Debug(string message, Object[] args)
+        public static void Debug(string message, Exception e)
+        {
+            if (e == null)
+                Debug(message);
+            else
+                log.Debug(message, e);
+        }
+        public static void DebugFormat(string message, params Object[] args)
         {
             log.DebugFormat(message, args);
-        }
-        public static void DebugException(string message, Exception e)
-        {
-            log.Debug(message, e);
         }
 
         public static void Info(string message)
         {
             log.Info(message);
         }
-        public static void Info(string message, params Object[] args)
+        public static void Info(string message, Exception e)
+        {
+            if (e == null)
+                Info(message);
+            else
+                log.Info(message, e);
+        }
+        public static void InfoFormat(string message, params Object[] args)
         {
             log.InfoFormat(message, args);
-        }
-        public static void InfoException(string message, Exception e)
-        {
-            log.Info(message, e);
         }
 
         public static void Warn(string message)
         {
             log.Warn(message);
         }
-        public static void Warn(string message, params Object[] args)
+        public static void Warn(string message, Exception e)
+        {
+            if (e == null)
+                Warn(message);
+            else
+                log.Warn(message, e);
+        }
+        public static void WarnFormat(string message, params Object[] args)
         {
             log.WarnFormat(message, args);
-        }
-        public static void WarnException(string message, Exception e)
-        {
-            log.Warn(message, e);
         }
 
         public static void Error(string message)
         {
             log.Error(message);
         }
-        public static void Error(string message, params Object[] args)
+        public static void Error(string message, Exception e)
+        {
+            if (e == null)
+                Error(message);
+            else
+                log.Error(message, e);
+        }
+        public static void ErrorFormat(string message, params Object[] args)
         {
             log.ErrorFormat(message, args);
-        }
-        public static void ErrorException(string message, Exception e)
-        {
-            log.Error(message, e);
         }
 
         public static void Fatal(string message)
         {
             log.Fatal(message);
         }
-        public static void Fatal(string message, params Object[] args)
+        public static void Fatal(string message, Exception e)
+        {
+            if (e == null)
+                Fatal(message);
+            else
+                log.Fatal(message, e);
+        }
+        public static void FatalFormat(string message, params Object[] args)
         {
             log.FatalFormat(message, args);
-        }
-        public static void FatalException(string message, Exception e)
-        {
-            log.Fatal(message, e);
         }
     }
 }

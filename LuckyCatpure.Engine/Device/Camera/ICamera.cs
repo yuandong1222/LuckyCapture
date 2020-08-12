@@ -10,12 +10,12 @@ namespace LuckyCatpure.Engine.Device.Camera
     {
         CameraInfo CameraInfo { get; set; }
 
-        ErrorCode Connect();
+        Result Connect();
 
-        ErrorCode StartCapture(int millisecond);
+        Result StartCapture(int millisecond);
 
-        ErrorCode GetCaputreStat();
+        Result GetCaputreStat();
 
-        ErrorCode GetCaputreData(UInt16[] data);
+        Result GetCaputreData(UInt16[] data);
     }
 }

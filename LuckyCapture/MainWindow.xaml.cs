@@ -42,7 +42,7 @@ namespace LuckyCapture
             Log.Info("test");
 
             List<ICamera> cameraList = new List<ICamera>();
-            ASICamera.ScanCameras(cameraList);
+            ASICamera.ScanASICameras(cameraList);
 
             var logBuilder = new StringBuilder();
 
