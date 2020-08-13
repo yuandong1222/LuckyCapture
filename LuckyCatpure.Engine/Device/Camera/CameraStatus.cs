@@ -7,7 +7,7 @@ namespace LuckyCatpure.Engine.Device.Camera
     public enum CameraStatus
     {
         Unknown = 0,
-        Connected = 1, //idle
+        Idle = 1, //Connected but not working
         Working = 2,
         Error = 3,
     }

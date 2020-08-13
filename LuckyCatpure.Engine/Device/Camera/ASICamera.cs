@@ -139,7 +139,7 @@ namespace LuckyCatpure.Engine.Device.Camera
 
             try
             {
-                ASICameraDll2.ASISetControlValue(_CameraID, ASI_CONTROL_TYPE.ASI_EXPOSURE, millisecond);
+                ASISetControlValue(_CameraID, ASI_CONTROL_TYPE.ASI_EXPOSURE, millisecond);
             }
             catch (Exception e)
             {
@@ -150,7 +150,7 @@ namespace LuckyCatpure.Engine.Device.Camera
 
             try
             {
-                asi_error_code = ASICameraDll2.ASIStartExposure(0, (isDark ? ASI_BOOL.ASI_TRUE : ASI_BOOL.ASI_FALSE));
+                asi_error_code = ASIStartExposure(0, (isDark ? ASI_BOOL.ASI_TRUE : ASI_BOOL.ASI_FALSE));
             }
             catch (Exception e)
             {
