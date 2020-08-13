@@ -29,7 +29,7 @@ namespace LuckyCatpure.Engine.Device.Camera
         /// </summary>
         public int PixelSize { get; set; }
         /// <summary>
-        /// TODO: 1500 mean 1.5e per ADU
+        /// TODO: 1500 mean 1.5e per ADU, pASICameraInfo.ElecPerADU * 1000000
         /// </summary>
         public int ElecPerADU { get; set; }
 
