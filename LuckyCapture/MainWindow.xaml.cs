@@ -86,7 +86,7 @@ namespace LuckyCapture
                 result = camera.GetCaputreData(buffer);
                 if (result.Code == ErrorCode.OK)
                 {
-                    //Log.InfoFormat("{0}, ExposureTime {1}ms", result.Message, i);
+                    Log.InfoFormat("{0}, ExposureTime {1}ms", result.Message, i);
                 }
                 else
                 {
