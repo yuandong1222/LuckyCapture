@@ -158,15 +158,60 @@ namespace LuckyCatpure.Engine.Device.Camera
             }
             return GetOperationResult("ASIStartExposure_" + (isDark ? "Dark" : "NoDark"), asi_error_code, exception);
         }
-        public Result GetCaputreStat()
+        public Result GetCaputreStat(out CameraStatus captureStatus)
         {
-            throw new NotImplementedException();
-        }
-        public Result GetCaputreData(ushort[] data)
-        {
-            throw new NotImplementedException();
+            ASI_ERROR_CODE asi_error_code = ASI_ERROR_CODE.ASI_SUCCESS;
+            Exception exception = null;
+            Result result;
+
+            ASI_EXPOSURE_STATUS aSI_EXPOSURE_STATUS = ASI_EXPOSURE_STATUS.ASI_EXP_WORKING;
+            try
+            {
+                asi_error_code = ASIGetExpStatus(_CameraID, out aSI_EXPOSURE_STATUS);
+            }
+            catch (Exception e)
+            {
+                exception = e;
+            }
+            result = GetOperationResult("ASIGetExpStatus", asi_error_code, exception);
+
+            captureStatus = result.Code == ErrorCode.OK ? ConvertToCameraStatus(aSI_EXPOSURE_STATUS) : CameraStatus.Unknown;
+            return result;
         }
 
+
+        public Result GetCaputreData(UInt16[] data)
+        {
+            ASI_ERROR_CODE asi_error_code = ASI_ERROR_CODE.ASI_SUCCESS;
+            Exception exception = null;
+
+            try
+            {
+                asi_error_code = ASIGetDataAfterExp(_CameraID, data, data.Length);
+            }
+            catch (Exception e)
+            {
+                exception = e;
+            }
+            return GetOperationResult("ASIGetDataAfterExp", asi_error_code, exception);
+        }
+
+        private CameraStatus ConvertToCameraStatus(ASI_EXPOSURE_STATUS aSI_EXPOSURE_STATUS)
+        {
+            switch (aSI_EXPOSURE_STATUS)
+            {
+                case ASI_EXPOSURE_STATUS.ASI_EXP_IDLE:
+                    return CameraStatus.Idle;
+                case ASI_EXPOSURE_STATUS.ASI_EXP_WORKING:
+                    return CameraStatus.Working;
+                case ASI_EXPOSURE_STATUS.ASI_EXP_SUCCESS:
+                    return CameraStatus.CaptureSuccess;
+                case ASI_EXPOSURE_STATUS.ASI_EXP_FAILED:
+                    return CameraStatus.Error;
+                default:
+                    return CameraStatus.Unknown;
+            }
+        }
         private Result GetOperationResult(string operationName, ASI_ERROR_CODE asi_error_code, Exception exception)
         {
             if (exception == null && asi_error_code == ASI_ERROR_CODE.ASI_SUCCESS)

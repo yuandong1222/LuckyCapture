@@ -16,7 +16,7 @@ namespace LuckyCatpure.Engine.Device.Camera
 
         Result StartCapture(int millisecond, bool isDark);
 
-        Result GetCaputreStat();
+        Result GetCaputreStat(out CameraStatus captureStatus);
 
         Result GetCaputreData(UInt16[] data);
     }
