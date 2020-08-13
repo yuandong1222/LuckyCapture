@@ -16,7 +16,7 @@ namespace LuckyCatpure.Engine.Common
             log = log4net.LogManager.GetLogger("");
         }
 
-        public static void Result(Result result)
+        public static Result Result(Result result)
         {
             if (result.Code == ErrorCode.OK)
             {
@@ -27,6 +27,7 @@ namespace LuckyCatpure.Engine.Common
                 //We don't log exception here, since it should be logged before
                 ErrorFormat("[{0}] {1}", result.Code.ToString(), result.Message);
             }
+            return result;
         }
 
         public static void Debug(string message)

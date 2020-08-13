@@ -39,49 +39,64 @@ namespace LuckyCapture
 
         private async void CameraConnect()
         {
-            Log.Info("test");
+            Result result;
+
+            Log.Info("Test started");
 
             List<ICamera> cameraList = new List<ICamera>();
-            ASICamera.ScanASICameras(cameraList);
+            result = ASICamera.ScanASICameras(cameraList);
+            if (Log.Result(result).Code != ErrorCode.OK) return;
 
-            var logBuilder = new StringBuilder();
-
-            ASI_ERROR_CODE asi_result = 0;
-            ASI_EXPOSURE_STATUS asi_exposure_status;
-
-            //find camera
-            int camera_count = ASICameraDll2.ASIGetNumOfConnectedCameras();
-            logBuilder.AppendFormat("Camera Count: {0} \n", camera_count);
-
-            if (camera_count == 0)
+            if (cameraList.Count == 0)
             {
-                logBuilder.AppendLine("No Camera Found");
-                Content1.Content = logBuilder.ToString();
+                Log.Info("No Camera Found");
                 return;
             }
 
-            //Open
-            asi_result = ASICameraDll2.ASIOpenCamera(0);
+            var camera = cameraList[0];
+            result = camera.Connect();
+            if (Log.Result(result).Code != ErrorCode.OK) return;
 
-            //Init
-            asi_result = ASICameraDll2.ASIInitCamera(0);
+            ushort[] buffer = new ushort[camera.CameraInfo.MaxPixelCount];
 
-            //ASIStartExposure
-            asi_result = ASICameraDll2.ASIStartExposure(0, ASI_BOOL.ASI_FALSE);
+            var startime = DateTime.Now;
+            for (int i = 0; i < 100; i++)
+            {
+                camera.StartCapture(1, false);
+                //camera.StartCapture(i, false);
 
+                CameraStatus status;
+                do
+                {
+                    result = camera.GetCaputreStat(out status);
+                } while (result.Code == ErrorCode.OK && status == CameraStatus.Working);
 
-            //ASIGetExpStatus
-            Thread.Sleep(1000);
+                if (Log.Result(result).Code != ErrorCode.OK) return;
+                if (result.Code != ErrorCode.OK)
+                {
+                    Log.Result(result);
+                    return;
+                }
+                if (status != CameraStatus.CaptureSuccess)
+                {
+                    Log.ErrorFormat("Capture Failed, CameraName {0}, ExposureTime {1}ms", camera.CameraInfo.DisplayName, i);
+                    return;
+                }
 
+                result = camera.GetCaputreData(buffer);
+                if (result.Code == ErrorCode.OK)
+                {
+                    //Log.InfoFormat("{0}, ExposureTime {1}ms", result.Message, i);
+                }
+                else
+                {
+                    Log.ErrorFormat("{0}, ExposureTime {1}ms", result.Message, i);
+                    return;
+                }
+            }
 
-            //if(status ==ASI_EXP_SUCCESS) ASIGetDataAfterExp
-            int size = 10000 * 10000;
-            IntPtr a = new IntPtr(size);
-            ushort[] arr = new ushort[size];
-            int buffersize = size * 2;
-            asi_result = ASICameraDll2.ASIGetDataAfterExp(0, arr, buffersize);
-            logBuilder.AppendFormat("Result {0}\n", asi_result);
-            Content1.Content = logBuilder.ToString();
+            var timecost = DateTime.Now - startime;
+            Log.InfoFormat("Total Time Cost: {0}s", timecost.TotalSeconds);
         }
     }
 }
