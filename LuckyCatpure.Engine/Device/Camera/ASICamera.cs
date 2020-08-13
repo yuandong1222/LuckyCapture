@@ -92,8 +92,10 @@ namespace LuckyCatpure.Engine.Device.Camera
         }
 
         private int _CameraID;
+        private CameraStatus _CameraStatus;
 
         public int CameraID { get { return _CameraID; } }
+        public CameraStatus Status { get { return _CameraStatus; } }
         public CameraInfo CameraInfo { get; set; }
 
         public ASICamera(int cameraID, CameraInfo cameraInfo)
@@ -129,9 +131,32 @@ namespace LuckyCatpure.Engine.Device.Camera
             }
             return GetOperationResult("ASIInitCamera", asi_error_code, exception);
         }
-        public Result StartCapture(int millisecond)
+        public Result StartCapture(int millisecond, bool isDark)
         {
-            throw new NotImplementedException();
+            ASI_ERROR_CODE asi_error_code = ASI_ERROR_CODE.ASI_SUCCESS;
+            Exception exception = null;
+            Result result;
+
+            try
+            {
+                ASICameraDll2.ASISetControlValue(_CameraID, ASI_CONTROL_TYPE.ASI_EXPOSURE, millisecond);
+            }
+            catch (Exception e)
+            {
+                exception = e;
+            }
+            result = GetOperationResult("ASISetControlValue_ASI_EXPOSURE", asi_error_code, exception);
+            if (result.Code != ErrorCode.OK) return result;
+
+            try
+            {
+                asi_error_code = ASICameraDll2.ASIStartExposure(0, (isDark ? ASI_BOOL.ASI_TRUE : ASI_BOOL.ASI_FALSE));
+            }
+            catch (Exception e)
+            {
+                exception = e;
+            }
+            return GetOperationResult("ASIStartExposure_" + (isDark ? "Dark" : "NoDark"), asi_error_code, exception);
         }
         public Result GetCaputreStat()
         {

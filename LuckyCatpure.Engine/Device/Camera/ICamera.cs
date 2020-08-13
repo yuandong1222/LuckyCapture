@@ -10,9 +10,11 @@ namespace LuckyCatpure.Engine.Device.Camera
     {
         CameraInfo CameraInfo { get; set; }
 
+        CameraStatus Status { get; }
+
         Result Connect();
 
-        Result StartCapture(int millisecond);
+        Result StartCapture(int millisecond, bool isDark);
 
         Result GetCaputreStat();
 
