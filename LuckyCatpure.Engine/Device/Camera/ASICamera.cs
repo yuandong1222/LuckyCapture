@@ -145,7 +145,6 @@ namespace LuckyCatpure.Engine.Device.Camera
             {
                 try
                 {
-                    asi_error_code = ASISetControlValue(_CameraID, ASI_CONTROL_TYPE.ASI_HIGH_SPEED_MODE, 1);
                     asi_error_code = ASISetControlValue(_CameraID, ASI_CONTROL_TYPE.ASI_EXPOSURE, millisecond);
                 }
                 catch (Exception e)
@@ -188,7 +187,6 @@ namespace LuckyCatpure.Engine.Device.Camera
             captureStatus = result.Code == ErrorCode.OK ? ConvertToCameraStatus(aSI_EXPOSURE_STATUS) : CameraStatus.Unknown;
             return result;
         }
-
 
         public Result GetCaputreData(UInt16[] data)
         {
