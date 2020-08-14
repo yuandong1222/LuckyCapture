@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
-
+using System.Threading;
 using LuckyCatpure.Engine.Common;
 
 using ZWOptical.ASISDK;
@@ -143,9 +143,9 @@ namespace LuckyCatpure.Engine.Device.Camera
 
             if (_LastExposureTime != millisecond)
             {
-
                 try
                 {
+                    asi_error_code = ASISetControlValue(_CameraID, ASI_CONTROL_TYPE.ASI_HIGH_SPEED_MODE, 1);
                     asi_error_code = ASISetControlValue(_CameraID, ASI_CONTROL_TYPE.ASI_EXPOSURE, millisecond);
                 }
                 catch (Exception e)
@@ -160,7 +160,7 @@ namespace LuckyCatpure.Engine.Device.Camera
 
             try
             {
-                asi_error_code = ASIStartExposure(0, (isDark ? ASI_BOOL.ASI_TRUE : ASI_BOOL.ASI_FALSE));
+                asi_error_code = ASIStartExposure(_CameraID, (isDark ? ASI_BOOL.ASI_TRUE : ASI_BOOL.ASI_FALSE));
             }
             catch (Exception e)
             {
@@ -203,6 +203,9 @@ namespace LuckyCatpure.Engine.Device.Camera
             {
                 exception = e;
             }
+
+            long value = ASIGetControlValue(_CameraID, ASI_CONTROL_TYPE.ASI_EXPOSURE);
+            Log.InfoFormat("{0}", value);
             return GetOperationResult("ASIGetDataAfterExp", asi_error_code, exception);
         }
 

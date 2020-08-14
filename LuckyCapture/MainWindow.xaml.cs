@@ -60,16 +60,19 @@ namespace LuckyCapture
             ushort[] buffer = new ushort[camera.CameraInfo.MaxPixelCount];
 
             var startime = DateTime.Now;
+            double timeForWaitMS = 0;
             for (int i = 0; i < 100; i++)
             {
-                camera.StartCapture(1, false);
+                camera.StartCapture(1000, false);
                 //camera.StartCapture(i, false);
 
                 CameraStatus status;
+                var time = DateTime.Now;
                 do
                 {
                     result = camera.GetCaputreStat(out status);
                 } while (result.Code == ErrorCode.OK && status == CameraStatus.Working);
+                timeForWaitMS += (DateTime.Now - time).TotalMilliseconds;
 
                 if (Log.Result(result).Code != ErrorCode.OK) return;
                 if (result.Code != ErrorCode.OK)
@@ -82,6 +85,7 @@ namespace LuckyCapture
                     Log.ErrorFormat("Capture Failed, CameraName {0}, ExposureTime {1}ms", camera.CameraInfo.DisplayName, i);
                     return;
                 }
+                //Thread.Sleep(76);
 
                 result = camera.GetCaputreData(buffer);
                 if (result.Code == ErrorCode.OK)
@@ -96,7 +100,7 @@ namespace LuckyCapture
             }
 
             var timecost = DateTime.Now - startime;
-            Log.InfoFormat("Total Time Cost: {0}s", timecost.TotalSeconds);
+            Log.InfoFormat("Total Time Cost: {0}s, Wait Time {1}ms", timecost.TotalSeconds, timeForWaitMS);
         }
     }
 }
