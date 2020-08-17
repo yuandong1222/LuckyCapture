@@ -123,7 +123,6 @@ namespace LuckyCatpure.Engine.Device.Camera
             if (result.Code != ErrorCode.OK) return result;
 
 
-
             asi_error_code = ASISetControlValue(_CameraID, ASI_CONTROL_TYPE.ASI_HIGH_SPEED_MODE, 1);
             try
             {
