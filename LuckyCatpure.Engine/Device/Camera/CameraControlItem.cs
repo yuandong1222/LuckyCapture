@@ -6,6 +6,31 @@ namespace LuckyCatpure.Engine.Device.Camera
 {
     public enum CameraControlItemType
     {
+        Unknown = 0,
+        Gain,
+        Exposure,
+        Gamma,
+        WhiteBalance_Red,
+        WhileBalance_Blue,
+        Brightness,
+        BandwidthHoverLoad,
+        OverClock,
+        Temperature,
+        TargetTemperature,
+        Flip,
+        AutoMaxGain,
+        AutoMaxExp,
+        AutoMaxBrightness,
+        HadrwareBin,
+        MonoBin,
+        HighSpeedMode,
+        FanOn,
+        CoolerOn,
+        CoolerPowerPercent,
+        PatternAdjust,
+        AntiDewDeater,
+        Humdity,
+        EnableDDR,
     }
     public class CameraControlItem
     {
