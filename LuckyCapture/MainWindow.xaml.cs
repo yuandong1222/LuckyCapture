@@ -70,7 +70,7 @@ namespace LuckyCapture
                 var time = DateTime.Now;
                 do
                 {
-                    result = camera.GetCaputreStat(out status);
+                    result = camera.GetCaputreStat(out status, false);
                 } while (result.Code == ErrorCode.OK && status == CameraStatus.Working);
                 timeForWaitMS += (DateTime.Now - time).TotalMilliseconds;
 
