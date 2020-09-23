@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Device\Camera\CameraCaptureStat.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="SDKs\ZWO_ASI\ASICamera2.dll" />
     <None Remove="SDKs\ZWO_ASI\ASICamera2.h" />
   </ItemGroup>
