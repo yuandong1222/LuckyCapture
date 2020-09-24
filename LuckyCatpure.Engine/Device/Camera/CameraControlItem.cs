@@ -35,7 +35,7 @@ namespace LuckyCatpure.Engine.Device.Camera
     public class CameraControlItem
     {
         public string ControlItemName { get; set; } //the name of the Control like Exposure, Gain etc..
-        public byte[] Description { get; set; } //description of this control
+        public string Description { get; set; } //description of this control
 
         public int MaxValue { get; set; }
         public int MinValue { get; set; }

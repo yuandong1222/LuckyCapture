@@ -165,6 +165,7 @@ namespace LuckyCatpure.Engine.Device.Camera
                 try
                 {
                     asi_error_code = ASIGetControlCaps(_CameraID, i, out asiControlCaps);
+                    _CameraControlItemList.Add(ConvertToCameraControlItem(asiControlCaps));
                 }
                 catch (Exception e)
                 {
@@ -172,8 +173,9 @@ namespace LuckyCatpure.Engine.Device.Camera
                 }
                 result = GetOperationResult("ASIGetNumOfControls", asi_error_code, exception);
                 if (result.Code != ErrorCode.OK) return result;
+
             }
-            throw new NotImplementedException();
+            return new Result();
         }
 
         public CameraControlItem[] GetControlItems()
@@ -184,7 +186,6 @@ namespace LuckyCatpure.Engine.Device.Camera
         {
             return _CameraControlItemList.SingleOrDefault(c => c.ControlItemType == type);
         }
-
         public Result SetControItemValue(CameraControlItemType type, int value)
         {
             throw new NotImplementedException();
@@ -279,6 +280,78 @@ namespace LuckyCatpure.Engine.Device.Camera
                     return CameraStatus.Unknown;
             }
         }
+        private CameraControlItem ConvertToCameraControlItem(ASI_CONTROL_CAPS asiControlCaps)
+        {
+            return new CameraControlItem
+            {
+                ControlItemName = asiControlCaps.Name,
+                ControlItemType = ConvertToCameraControlItemType(asiControlCaps.ControlType),
+                DefaultValue = asiControlCaps.DefaultValue,
+                Description = asiControlCaps.Description,
+                IsAutoSupported = asiControlCaps.IsAutoSupported == ASI_BOOL.ASI_TRUE,
+                IsWritable = asiControlCaps.IsWritable == ASI_BOOL.ASI_TRUE,
+                MaxValue = asiControlCaps.MaxValue,
+                MinValue = asiControlCaps.MinValue,
+                Value = asiControlCaps.DefaultValue,
+            };
+        }
+        private CameraControlItemType ConvertToCameraControlItemType(ASI_CONTROL_TYPE controlType)
+        {
+             switch (controlType)
+            {
+                case ASI_CONTROL_TYPE.ASI_GAIN:
+                    return CameraControlItemType.Gain;
+                case ASI_CONTROL_TYPE.ASI_EXPOSURE:
+                    return CameraControlItemType.Exposure;
+                case ASI_CONTROL_TYPE.ASI_GAMMA:
+                    return CameraControlItemType.Gamma;
+                case ASI_CONTROL_TYPE.ASI_WB_R:
+                    return CameraControlItemType.WhiteBalance_Red;
+                case ASI_CONTROL_TYPE.ASI_WB_B:
+                    return CameraControlItemType.WhileBalance_Blue;
+                case ASI_CONTROL_TYPE.ASI_BRIGHTNESS:
+                    return CameraControlItemType.Brightness;
+                case ASI_CONTROL_TYPE.ASI_BANDWIDTHOVERLOAD:
+                    return CameraControlItemType.BandwidthHoverLoad;
+                case ASI_CONTROL_TYPE.ASI_OVERCLOCK:
+                    return CameraControlItemType.OverClock;
+                case ASI_CONTROL_TYPE.ASI_TEMPERATURE:
+                    return CameraControlItemType.Temperature;
+                case ASI_CONTROL_TYPE.ASI_FLIP:
+                    return CameraControlItemType.Flip;
+                case ASI_CONTROL_TYPE.ASI_AUTO_MAX_GAIN:
+                    return CameraControlItemType.Gain;
+                case ASI_CONTROL_TYPE.ASI_AUTO_MAX_EXP:
+                    return CameraControlItemType.AutoMaxExp;
+                case ASI_CONTROL_TYPE.ASI_AUTO_MAX_BRIGHTNESS:
+                    return CameraControlItemType.AutoMaxBrightness;
+                case ASI_CONTROL_TYPE.ASI_HARDWARE_BIN:
+                    return CameraControlItemType.HadrwareBin;
+                case ASI_CONTROL_TYPE.ASI_HIGH_SPEED_MODE:
+                    return CameraControlItemType.HighSpeedMode;
+                case ASI_CONTROL_TYPE.ASI_COOLER_POWER_PERC:
+                    return CameraControlItemType.CoolerPowerPercent;
+                case ASI_CONTROL_TYPE.ASI_TARGET_TEMP:
+                    return CameraControlItemType.TargetTemperature;
+                case ASI_CONTROL_TYPE.ASI_COOLER_ON:
+                    return CameraControlItemType.CoolerOn;
+                case ASI_CONTROL_TYPE.ASI_MONO_BIN:
+                    return CameraControlItemType.MonoBin;
+                case ASI_CONTROL_TYPE.ASI_FAN_ON:
+                    return CameraControlItemType.FanOn;
+                case ASI_CONTROL_TYPE.ASI_PATTERN_ADJUST:
+                    return CameraControlItemType.PatternAdjust;
+                case ASI_CONTROL_TYPE.ASI_ANTI_DEW_HEATER:
+                    return CameraControlItemType.AntiDewDeater;
+                case ASI_CONTROL_TYPE.ASI_HUMIDITY:
+                    return CameraControlItemType.Humdity;
+                case ASI_CONTROL_TYPE.ASI_ENABLE_DDR:
+                    return CameraControlItemType.EnableDDR;
+                default:
+                    return CameraControlItemType.Unknown;
+            };
+        }
+
         private Result GetOperationResult(string operationName, ASI_ERROR_CODE asi_error_code, Exception exception, bool logSuccess = true)
         {
             if (exception == null && asi_error_code == ASI_ERROR_CODE.ASI_SUCCESS && logSuccess)
@@ -294,6 +367,5 @@ namespace LuckyCatpure.Engine.Device.Camera
 
             return new Result(ErrorCode.OperationFailed, message, exception);
         }
-
     }
 }
