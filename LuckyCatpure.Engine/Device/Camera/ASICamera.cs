@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
@@ -93,6 +94,8 @@ namespace LuckyCatpure.Engine.Device.Camera
 
         private int _CameraID;
         private CameraStatus _CameraStatus;
+        private List<CameraControlItem> _CameraControlItemList = new List<CameraControlItem>();
+
         private int _LastExposureTime = -1;
 
         public int CameraID { get { return _CameraID; } }
@@ -134,9 +137,10 @@ namespace LuckyCatpure.Engine.Device.Camera
             result = GetOperationResult("ASIInitCamera", asi_error_code, exception);
             if (result.Code != ErrorCode.OK) return result;
 
-            return GetControlItems();
+            return InitialControlItems();
         }
-        private Result GetControlItems()
+
+        private Result InitialControlItems()
         {
             ASI_ERROR_CODE asi_error_code = ASI_ERROR_CODE.ASI_SUCCESS;
             Exception exception = null;
@@ -172,9 +176,13 @@ namespace LuckyCatpure.Engine.Device.Camera
             throw new NotImplementedException();
         }
 
-        CameraControlItem[] ICamera.GetControlItems()
+        public CameraControlItem[] GetControlItems()
         {
-            throw new NotImplementedException();
+            return _CameraControlItemList.ToArray();
+        }
+        public CameraControlItem GetControlItem(CameraControlItemType type)
+        {
+            return _CameraControlItemList.SingleOrDefault(c => c.ControlItemType == type);
         }
 
         public Result SetControItemValue(CameraControlItemType type, int value)
@@ -234,7 +242,6 @@ namespace LuckyCatpure.Engine.Device.Camera
             captureStatus = result.Code == ErrorCode.OK ? ConvertToCameraStatus(aSI_EXPOSURE_STATUS) : CameraStatus.Unknown;
             return result;
         }
-
         public Result GetCaputreData(UInt16[] data)
         {
             ASI_ERROR_CODE asi_error_code = ASI_ERROR_CODE.ASI_SUCCESS;
@@ -249,8 +256,10 @@ namespace LuckyCatpure.Engine.Device.Camera
                 exception = e;
             }
 
-            long value = ASIGetControlValue(_CameraID, ASI_CONTROL_TYPE.ASI_EXPOSURE);
-            Log.InfoFormat("{0}", value);
+            //TODO: DebugLog
+            //long value = ASIGetControlValue(_CameraID, ASI_CONTROL_TYPE.ASI_EXPOSURE);
+            //Log.InfoFormat("{0}", value);
+
             return GetOperationResult("ASIGetDataAfterExp", asi_error_code, exception);
         }
 
