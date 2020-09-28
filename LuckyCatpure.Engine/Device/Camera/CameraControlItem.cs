@@ -44,5 +44,7 @@ namespace LuckyCatpure.Engine.Device.Camera
         public bool IsAutoSupported { get; set; } //support auto set 1, don't support 0
         public bool IsWritable { get; set; } //some control like temperature can only be read by some cameras
         public CameraControlItemType ControlItemType { get; set; } //this is used to get value and set value of the control
+
+        public object NativeType { get; set; }
     }
 }

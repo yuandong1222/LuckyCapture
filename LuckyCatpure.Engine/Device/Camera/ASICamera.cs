@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading;
-using LuckyCatpure.Engine.Common;
 
-using ZWOptical.ASISDK;
+using LuckyCatpure.Engine.Common;
 using static ZWOptical.ASISDK.ASICameraDll2;
 
 namespace LuckyCatpure.Engine.Device.Camera
@@ -188,7 +184,29 @@ namespace LuckyCatpure.Engine.Device.Camera
         }
         public Result SetControItemValue(CameraControlItemType type, int value)
         {
-            throw new NotImplementedException();
+            var controlItem = _CameraControlItemList.SingleOrDefault(c => c.ControlItemType == type);
+            if (controlItem == null)
+                return new Result(ErrorCode.Error, "No Such Control Item");
+
+            //TODO:if newValue = oldValue, do nothing?
+            var oldValue = controlItem.Value;
+
+            ASI_ERROR_CODE asi_error_code = ASI_ERROR_CODE.ASI_SUCCESS;
+            Exception exception = null;
+            try
+            {
+                asi_error_code = ASISetControlValue(_CameraID, (ASI_CONTROL_TYPE)controlItem.NativeType, value);
+                controlItem.Value = value; //TODO: We should get value from device 
+            }
+            catch (Exception e)
+            {
+                exception = e;
+            }
+
+            //TODO: Log the description the control item include min and max value, etc.
+            return GetOperationResult(String.Format("SetControlValue, ItemName {0}, ItemType {1}, OldValue {2}, NewValue {3}", 
+                controlItem.Description, controlItem.ControlItemType, oldValue, value), 
+                asi_error_code, exception);
         }
 
         public Result StartCapture(int millisecond, bool isDark)
@@ -297,7 +315,7 @@ namespace LuckyCatpure.Engine.Device.Camera
         }
         private CameraControlItemType ConvertToCameraControlItemType(ASI_CONTROL_TYPE controlType)
         {
-             switch (controlType)
+            switch (controlType)
             {
                 case ASI_CONTROL_TYPE.ASI_GAIN:
                     return CameraControlItemType.Gain;
