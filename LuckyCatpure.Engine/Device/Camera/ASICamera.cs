@@ -300,9 +300,9 @@ namespace LuckyCatpure.Engine.Device.Camera
             return GetOperationResult("ASIGetDataAfterExp", asi_error_code, exception);
         }
 
-        private CameraStatus ConvertToCameraStatus(ASI_EXPOSURE_STATUS aSI_EXPOSURE_STATUS)
+        private CameraStatus ConvertToCameraStatus(ASI_EXPOSURE_STATUS asi_EXPOSURE_STATUS)
         {
-            switch (aSI_EXPOSURE_STATUS)
+            switch (asi_EXPOSURE_STATUS)
             {
                 case ASI_EXPOSURE_STATUS.ASI_EXP_IDLE:
                     return CameraStatus.Idle;
