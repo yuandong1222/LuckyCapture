@@ -90,8 +90,6 @@ namespace LuckyCatpure.Engine.Device.Camera
 
         private List<CameraControlItem> _CameraControlItemList = new List<CameraControlItem>();
 
-        private int _LastExposureTime = -1;
-
         public int CameraID { get; }
         public CameraStatus Status { get; private set; }
         public CameraInfo CameraInfo { get; set; }
@@ -224,27 +222,10 @@ namespace LuckyCatpure.Engine.Device.Camera
                 asi_error_code, exception);
         }
 
-        public Result StartCapture(int millisecond, bool isDark)
+        public Result StartCapture(bool isDark)
         {
             ASI_ERROR_CODE asi_error_code = ASI_ERROR_CODE.ASI_SUCCESS;
             Exception exception = null;
-            Result result;
-
-            if (_LastExposureTime != millisecond)
-            {
-                try
-                {
-                    asi_error_code = ASISetControlValue(CameraID, ASI_CONTROL_TYPE.ASI_EXPOSURE, millisecond);
-                }
-                catch (Exception e)
-                {
-                    exception = e;
-                }
-                result = GetOperationResult("ASISetControlValue_ASI_EXPOSURE", asi_error_code, exception);
-                if (result.Code != ErrorCode.OK) return result;
-
-                _LastExposureTime = millisecond;
-            }
 
             try
             {

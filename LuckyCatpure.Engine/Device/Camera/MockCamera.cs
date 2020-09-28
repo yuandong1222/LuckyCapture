@@ -45,7 +45,7 @@ namespace LuckyCatpure.Engine.Device.Camera
             throw new NotImplementedException();
         }
 
-        public Result StartCapture(int millisecond, bool isDark)
+        public Result StartCapture(bool isDark)
         {
             throw new NotImplementedException();
         }

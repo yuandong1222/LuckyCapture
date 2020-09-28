@@ -63,7 +63,7 @@ namespace LuckyCapture
             double timeForWaitMS = 0;
             for (int i = 0; i < 100; i++)
             {
-                camera.StartCapture(1000000, false);
+                camera.StartCapture(false);
                 //camera.StartCapture(i, false);
 
                 CameraStatus status;

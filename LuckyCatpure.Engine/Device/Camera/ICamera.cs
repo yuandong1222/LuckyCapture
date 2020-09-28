@@ -17,7 +17,7 @@ namespace LuckyCatpure.Engine.Device.Camera
         CameraControlItem[] GetControlItems();
         Result SetControItemValue(CameraControlItemType type, int value);
 
-        Result StartCapture(int millisecond, bool isDark);
+        Result StartCapture(bool isDark);
         Result GetCaputreStat(out CameraStatus captureStatus, bool logSuccessResult);
         Result GetCaputreData(UInt16[] data);
     }
