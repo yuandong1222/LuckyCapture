@@ -88,20 +88,20 @@ namespace LuckyCatpure.Engine.Device.Camera
             }
         }
 
-        private int _CameraID;
-        private CameraStatus _CameraStatus;
         private List<CameraControlItem> _CameraControlItemList = new List<CameraControlItem>();
 
         private int _LastExposureTime = -1;
 
-        public int CameraID { get { return _CameraID; } }
-        public CameraStatus Status { get { return _CameraStatus; } }
+        public int CameraID { get; }
+        public CameraStatus Status { get; private set; }
         public CameraInfo CameraInfo { get; set; }
 
         public ASICamera(int cameraID, CameraInfo cameraInfo)
         {
-            this._CameraID = cameraID;
+            this.CameraID = cameraID;
             this.CameraInfo = cameraInfo;
+
+            Status = CameraStatus.Unknown;
         }
 
         public Result Connect()
@@ -112,7 +112,7 @@ namespace LuckyCatpure.Engine.Device.Camera
 
             try
             {
-                asi_error_code = ASIOpenCamera(_CameraID);
+                asi_error_code = ASIOpenCamera(CameraID);
             }
             catch (Exception e)
             {
@@ -121,10 +121,9 @@ namespace LuckyCatpure.Engine.Device.Camera
             result = GetOperationResult("ASIOpenCamera", asi_error_code, exception);
             if (result.Code != ErrorCode.OK) return result;
 
-            //asi_error_code = ASISetControlValue(_CameraID, ASI_CONTROL_TYPE.ASI_HIGH_SPEED_MODE, 1);
             try
             {
-                asi_error_code = ASIInitCamera(_CameraID);
+                asi_error_code = ASIInitCamera(CameraID);
             }
             catch (Exception e)
             {
@@ -141,12 +140,14 @@ namespace LuckyCatpure.Engine.Device.Camera
             Exception exception = null;
             try
             {
-                asi_error_code = ASICloseCamera(_CameraID);
+                asi_error_code = ASICloseCamera(CameraID);
             }
             catch (Exception e)
             {
                 exception = e;
             }
+
+            Status = CameraStatus.Closed;
             return GetOperationResult("ASICloseCamera", asi_error_code, exception);
         }
 
@@ -159,7 +160,7 @@ namespace LuckyCatpure.Engine.Device.Camera
             int controlItemCount = 0;
             try
             {
-                asi_error_code = ASIGetNumOfControls(_CameraID, out controlItemCount);
+                asi_error_code = ASIGetNumOfControls(CameraID, out controlItemCount);
             }
             catch (Exception e)
             {
@@ -174,7 +175,7 @@ namespace LuckyCatpure.Engine.Device.Camera
                 ASI_CONTROL_CAPS asiControlCaps;
                 try
                 {
-                    asi_error_code = ASIGetControlCaps(_CameraID, i, out asiControlCaps);
+                    asi_error_code = ASIGetControlCaps(CameraID, i, out asiControlCaps);
                     _CameraControlItemList.Add(ConvertToCameraControlItem(asiControlCaps));
                 }
                 catch (Exception e)
@@ -209,7 +210,7 @@ namespace LuckyCatpure.Engine.Device.Camera
             Exception exception = null;
             try
             {
-                asi_error_code = ASISetControlValue(_CameraID, ((ASI_CONTROL_CAPS)controlItem.NativeItem).ControlType, value);
+                asi_error_code = ASISetControlValue(CameraID, ((ASI_CONTROL_CAPS)controlItem.NativeItem).ControlType, value);
                 controlItem.Value = value; //TODO: We should get value from device 
             }
             catch (Exception e)
@@ -233,7 +234,7 @@ namespace LuckyCatpure.Engine.Device.Camera
             {
                 try
                 {
-                    asi_error_code = ASISetControlValue(_CameraID, ASI_CONTROL_TYPE.ASI_EXPOSURE, millisecond);
+                    asi_error_code = ASISetControlValue(CameraID, ASI_CONTROL_TYPE.ASI_EXPOSURE, millisecond);
                 }
                 catch (Exception e)
                 {
@@ -247,7 +248,8 @@ namespace LuckyCatpure.Engine.Device.Camera
 
             try
             {
-                asi_error_code = ASIStartExposure(_CameraID, (isDark ? ASI_BOOL.ASI_TRUE : ASI_BOOL.ASI_FALSE));
+                asi_error_code = ASIStartExposure(CameraID, (isDark ? ASI_BOOL.ASI_TRUE : ASI_BOOL.ASI_FALSE));
+                Status = CameraStatus.Working;
             }
             catch (Exception e)
             {
@@ -264,7 +266,7 @@ namespace LuckyCatpure.Engine.Device.Camera
             ASI_EXPOSURE_STATUS aSI_EXPOSURE_STATUS = ASI_EXPOSURE_STATUS.ASI_EXP_WORKING;
             try
             {
-                asi_error_code = ASIGetExpStatus(_CameraID, out aSI_EXPOSURE_STATUS);
+                asi_error_code = ASIGetExpStatus(CameraID, out aSI_EXPOSURE_STATUS);
             }
             catch (Exception e)
             {
@@ -272,7 +274,9 @@ namespace LuckyCatpure.Engine.Device.Camera
             }
             result = GetOperationResult("ASIGetExpStatus", asi_error_code, exception, logSuccessResult);
 
-            captureStatus = result.Code == ErrorCode.OK ? ConvertToCameraStatus(aSI_EXPOSURE_STATUS) : CameraStatus.Unknown;
+            Status = result.Code == ErrorCode.OK ? ConvertToCameraStatus(aSI_EXPOSURE_STATUS) : CameraStatus.Unknown;
+            captureStatus = Status;
+
             return result;
         }
         public Result GetCaputreData(UInt16[] data)
@@ -282,7 +286,7 @@ namespace LuckyCatpure.Engine.Device.Camera
 
             try
             {
-                asi_error_code = ASIGetDataAfterExp(_CameraID, data, data.Length);
+                asi_error_code = ASIGetDataAfterExp(CameraID, data, data.Length);
             }
             catch (Exception e)
             {
@@ -389,14 +393,15 @@ namespace LuckyCatpure.Engine.Device.Camera
         {
             if (exception == null && asi_error_code == ASI_ERROR_CODE.ASI_SUCCESS && logSuccess)
             {
-                Log.InfoFormat("{0} Success, CameraID {1}, CameraName {2}", operationName, _CameraID, CameraInfo.DisplayName);
-                return new Result(String.Format("{0} Success, CameraID {1}, CameraName {2}", operationName, _CameraID, CameraInfo.DisplayName));
+                Log.InfoFormat("{0} Success, CameraID {1}, CameraName {2}", operationName, CameraID, CameraInfo.DisplayName);
+                return new Result(String.Format("{0} Success, CameraID {1}, CameraName {2}", operationName, CameraID, CameraInfo.DisplayName));
             }
 
             string message = String.Format("{0} Failed, CameraID {1}, CameraName {2}, ASI_ERROR_CODE {3}",
-                operationName, _CameraID, CameraInfo.DisplayName, asi_error_code.ToString());
+                operationName, CameraID, CameraInfo.DisplayName, asi_error_code.ToString());
 
             Log.Error(message, exception);
+            Status = CameraStatus.Error;
 
             return new Result(ErrorCode.OperationFailed, message, exception);
         }

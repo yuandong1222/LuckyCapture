@@ -11,5 +11,6 @@ namespace LuckyCatpure.Engine.Device.Camera
         Working = 2, //Capturing
         CaptureSuccess = 3,// Exposure finished and waiting for download
         Error = 4,
+        Closed = 5, //After Disconnect
     }
 }
