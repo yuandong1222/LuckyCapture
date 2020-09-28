@@ -135,6 +135,20 @@ namespace LuckyCatpure.Engine.Device.Camera
 
             return InitialControlItems();
         }
+        public Result Disconnect()
+        {
+            ASI_ERROR_CODE asi_error_code = ASI_ERROR_CODE.ASI_SUCCESS;
+            Exception exception = null;
+            try
+            {
+                asi_error_code = ASICloseCamera(_CameraID);
+            }
+            catch (Exception e)
+            {
+                exception = e;
+            }
+            return GetOperationResult("ASICloseCamera", asi_error_code, exception);
+        }
 
         private Result InitialControlItems()
         {
@@ -195,7 +209,7 @@ namespace LuckyCatpure.Engine.Device.Camera
             Exception exception = null;
             try
             {
-                asi_error_code = ASISetControlValue(_CameraID, (ASI_CONTROL_TYPE)controlItem.NativeType, value);
+                asi_error_code = ASISetControlValue(_CameraID, ((ASI_CONTROL_CAPS)controlItem.NativeItem).ControlType, value);
                 controlItem.Value = value; //TODO: We should get value from device 
             }
             catch (Exception e)
@@ -311,6 +325,7 @@ namespace LuckyCatpure.Engine.Device.Camera
                 MaxValue = asiControlCaps.MaxValue,
                 MinValue = asiControlCaps.MinValue,
                 Value = asiControlCaps.DefaultValue,
+                NativeItem = asiControlCaps,
             };
         }
         private CameraControlItemType ConvertToCameraControlItemType(ASI_CONTROL_TYPE controlType)

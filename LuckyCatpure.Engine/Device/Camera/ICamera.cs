@@ -14,6 +14,8 @@ namespace LuckyCatpure.Engine.Device.Camera
 
         Result Connect();
 
+        Result Disconnect();
+
         CameraControlItem[] GetControlItems();
 
         Result SetControItemValue(CameraControlItemType type, int value);

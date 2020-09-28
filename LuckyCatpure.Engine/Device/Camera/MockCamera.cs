@@ -20,6 +20,11 @@ namespace LuckyCatpure.Engine.Device.Camera
             return new Result();
         }
 
+        public Result Disconnect()
+        {
+            throw new NotImplementedException();
+        }
+
         public Result GetCaputreData(ushort[] data)
         {
             throw new NotImplementedException();
